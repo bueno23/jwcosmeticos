@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+/* Identidade JW Cosméticos: preto e dourado do brasão */
+:root {
+  --preto: #0B0B0C;
+  --superficie: #131315;
+  --superficie-2: #1A1A1D;
+  --borda: #26262A;
+  --borda-clara: #33333A;
+  --dourado: #F5C518;
+  --dourado-escuro: #C99C0B;
+  --laranja: #F59E3B;
+  --texto: #F4F4F5;
+  --texto-2: #A1A1AA;
+  --texto-3: #71717A;
+  --positivo: #22C55E;
+  --negativo: #EF4444;
+}
+
+@theme inline {
+  --color-preto: var(--preto);
+  --color-superficie: var(--superficie);
+  --color-superficie-2: var(--superficie-2);
+  --color-borda: var(--borda);
+  --color-borda-clara: var(--borda-clara);
+  --color-dourado: var(--dourado);
+  --color-dourado-escuro: var(--dourado-escuro);
+  --color-laranja: var(--laranja);
+  --color-texto: var(--texto);
+  --color-texto-2: var(--texto-2);
+  --color-texto-3: var(--texto-3);
+  --color-positivo: var(--positivo);
+  --color-negativo: var(--negativo);
+  --font-sans: var(--font-inter);
+  --radius-card: 14px;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: var(--preto);
+  color: var(--texto);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--dourado); color: #0B0B0C; }
+
+/* Barra de rolagem discreta, para não brigar com o fundo escuro */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2A2A2F; border-radius: 99px; border: 3px solid var(--preto); }
+::-webkit-scrollbar-thumb:hover { background: #3A3A41; }
+
+.num { font-variant-numeric: tabular-nums; }
+.card {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--radius-card);
+}
+.card-hover { transition: border-color .15s ease, background .15s ease; }
+.card-hover:hover { border-color: var(--borda-clara); background: var(--superficie-2); }
+.focus-dourado:focus-visible { outline: 2px solid var(--dourado); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

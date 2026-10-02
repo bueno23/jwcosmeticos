@@ -1,34 +1,87 @@
-# JW Cosméticos Multimarcas — Controle de Estoque
+# JW Cosméticos — Sistema de Gestão
 
-Sistema de controle de estoque para uso local, com dados salvos em um arquivo SQLite (`estoque.db`) no próprio computador. Não precisa de internet.
+Estoque, vendas e financeiro da JW Cosméticos Multimarcas. Interface escura com a identidade da marca (preto e dourado do brasão), pensada para a dona acompanhar a loja no computador e operar a venda no balcão.
 
-A interface roda como uma página local que abre sozinha no seu navegador (Safari/Chrome) — por baixo dos panos é só um servidor Python rodando na sua própria máquina, nada sai do computador.
+## Stack
 
-## Como instalar
+- **Next.js 16** (App Router, Server Components) + **TypeScript**
+- **Tailwind CSS 4** e **Lucide** para a interface, **Recharts** para os gráficos
+- **PostgreSQL** com **Prisma 7** (adapter `@prisma/adapter-pg`)
+- **Zod** + **React Hook Form** nos formulários
 
-Nenhuma instalação extra é necessária — o programa usa apenas bibliotecas que já vêm junto com o Python (biblioteca padrão + SQLite). Só precisa ter o Python 3 instalado (o Mac já vem com ele).
+## Arquitetura
 
-## Como usar
-
-```bash
-python3 main.py
+```
+src/
+  app/                 rotas e páginas (Server Components por padrão)
+  components/
+    layout/            sidebar, topbar e o shell do sistema
+    ui/                peças reutilizáveis (StatCard, Card, StockBadge…)
+    dashboard/         gráficos (Client Components, só onde precisa)
+  lib/
+    services/          regra de negócio e acesso ao banco
+    prisma.ts          conexão única com o Postgres
+    format.ts          dinheiro, datas e percentuais em pt-BR
+prisma/
+  schema.prisma        modelo de dados
+  seed.ts              dados realistas para desenvolvimento
 ```
 
-O terminal vai mostrar um endereço (`http://127.0.0.1:8899/`) e abrir essa página automaticamente no seu navegador padrão. **Deixe o terminal aberto** enquanto estiver usando o programa — fechar o terminal (ou apertar Ctrl+C nele) encerra o servidor. Se o navegador não abrir sozinho, copie o endereço mostrado no terminal e cole na barra de endereços.
+Regra: **componente não fala com o banco**. Toda consulta vive em `src/lib/services`, e a página monta o que o serviço devolve.
 
-Na primeira execução, o arquivo `estoque.db` é criado automaticamente na pasta do projeto — é nele que ficam todos os dados. Faça backups periódicos desse arquivo (ou use a exportação em CSV, na tela de Relatórios).
+O modelo já nasce **multiempresa**: tudo pendura em `Company`. Hoje existe uma loja só, mas virar SaaS não exige refazer o esquema.
 
-## Funcionalidades
+## Rodar localmente
 
-- **Dashboard**: resumo de produtos ativos, valor total em estoque e alertas de estoque baixo / validade próxima.
-- **Produtos**: cadastro, edição, busca e ativação/desativação (o histórico não é apagado ao desativar um produto).
-- **Movimentações**:
-  - *Entrada*: registra a compra/reposição de um produto, com data de validade do lote.
-  - *Saída*: registra venda, perda, produto vencido ou ajuste — o sistema retira automaticamente primeiro dos lotes que vencem mais cedo.
-  - *Histórico*: consulta de todas as movimentações, com filtro por tipo.
-- **Relatórios**: valor total em estoque (por preço de custo e de venda), destaque de produtos com estoque baixo, e exportação de produtos/movimentações em CSV (compatível com Excel).
+Precisa de Docker (para o Postgres) e Node 22+.
 
-## Próximos passos possíveis
+```bash
+docker run -d --name jw-estoque-db -e POSTGRES_PASSWORD=jw -e POSTGRES_DB=jw_estoque -p 55433:5432 postgres:16-alpine
+```
 
-- Criar um atalho/ícone que rode `python3 main.py` com duplo clique, sem precisar abrir o terminal manualmente.
-- Backup automático do `estoque.db` em outro local (pendrive, nuvem).
+Crie o arquivo `.env`:
+
+```
+DATABASE_URL="postgresql://postgres:jw@localhost:55433/jw_estoque?schema=public"
+```
+
+Depois:
+
+```bash
+npm install
+npm run db:migrate    # cria as tabelas
+npm run db:seed       # popula com dados de demonstração
+npm run dev
+```
+
+Abre em http://localhost:3000.
+
+### Comandos
+
+| Comando | O que faz |
+|---|---|
+| `npm run dev` | sobe o sistema em desenvolvimento |
+| `npm run build` | build de produção |
+| `npm run lint` / `npm run typecheck` | qualidade do código |
+| `npm run db:migrate` | aplica alterações do schema |
+| `npm run db:seed` | recria os dados de demonstração |
+| `npm run db:studio` | abre o Prisma Studio para olhar o banco |
+| `npm run db:reset` | zera o banco e roda tudo de novo |
+
+## Dados de demonstração
+
+O seed cria a JW Cosméticos com 8 categorias, 20 produtos, 3 fornecedores, 5 clientes, cerca de 450 vendas espalhadas pelos últimos 30 dias, despesas, contas a pagar, fiado em aberto e um caixa aberto. Todo estoque nasce de uma movimentação — nunca de um número solto —, então o histórico bate com o saldo.
+
+## Estado do projeto
+
+Fase 1 concluída: identidade visual, layout com sidebar e a dashboard completa lendo do banco.
+
+A seguir: cadastros (produtos, categorias, fornecedores, clientes), PDV e caixa, financeiro, relatórios e, por último, multiempresa com login.
+
+## Dados de demonstração e acesso
+
+O seed cria a loja com categorias de cosméticos, 20 produtos, 3 fornecedores, 5 clientes, cerca de 450 vendas e um caixa aberto. Os usuários de demonstração e a senha ficam em `prisma/seed.ts`. Para a loja real, crie o dono com `prisma/criar-dono.ts` e não rode o seed.
+
+## Versão anterior
+
+O app em Python + SQLite está em `legado/`, só como referência.

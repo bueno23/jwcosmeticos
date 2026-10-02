@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JW Cosméticos · Controle de estoque</title>
+  <link rel="icon" href="/logo.png" />
+  <link rel="preload" href="/fonts/bodoni-moda-500.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/estilo.css" />
+</head>
+<body>
+  <div class="app">
+    <nav class="menu" aria-label="Principal">
+      <div class="menu-marca">
+        <img class="menu-logo" src="/logo.png" alt="" />
+        <div class="menu-nome">JW Cosméticos<small>Multimarcas</small></div>
+      </div>
+      <div class="menu-lista" id="menu-lista"></div>
+      <div class="menu-rodape">Controle de estoque <span id="versao"></span></div>
+    </nav>
+    <div class="corpo">
+      <main class="conteudo" id="conteudo"></main>
+    </div>
+  </div>
+
+  <div class="modal-fundo" id="modal-fundo" hidden>
+    <div class="modal" id="modal-caixa" role="dialog" aria-modal="true"></div>
+  </div>
+  <div class="avisos" id="avisos" role="status" aria-live="polite"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
