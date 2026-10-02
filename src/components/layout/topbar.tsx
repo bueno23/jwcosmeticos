@@ -1,14 +1,18 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Bell, ChevronDown, LogOut, Menu, Search, Store, User } from 'lucide-react'
+import { Bell, ChevronDown, KeyRound, LogOut, Menu, Search, Store, User } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { ROTULO_PAPEL } from '@/lib/auth/papeis'
 import { sairAction } from '@/app/(auth)/login/actions'
+import { useToast } from '@/components/ui/toast'
 import type { UsuarioShell } from './app-shell'
+import { TrocarSenhaModal } from './trocar-senha-modal'
 
 export function Topbar({ onAbrirMenu, usuario }: { onAbrirMenu: () => void; usuario: UsuarioShell }) {
   const [menuAberto, setMenuAberto] = useState(false)
+  const [trocarSenhaAberta, setTrocarSenhaAberta] = useState(false)
+  const toast = useToast()
   const caixa = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -75,6 +79,19 @@ export function Topbar({ onAbrirMenu, usuario }: { onAbrirMenu: () => void; usua
                 </div>
               </div>
 
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setMenuAberto(false)
+                  setTrocarSenhaAberta(true)
+                }}
+                className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-texto-2 transition-colors hover:bg-superficie-2 hover:text-texto"
+              >
+                <KeyRound size={14} />
+                Trocar senha
+              </button>
+
               <form action={sairAction}>
                 <button
                   type="submit"
@@ -89,6 +106,16 @@ export function Topbar({ onAbrirMenu, usuario }: { onAbrirMenu: () => void; usua
           )}
         </div>
       </div>
+
+      {trocarSenhaAberta && (
+        <TrocarSenhaModal
+          onFechar={() => setTrocarSenhaAberta(false)}
+          onSucesso={(mensagem) => {
+            setTrocarSenhaAberta(false)
+            toast(mensagem, 'ok')
+          }}
+        />
+      )}
     </header>
   )
 }

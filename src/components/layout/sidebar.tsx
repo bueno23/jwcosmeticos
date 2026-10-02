@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import {
-  BarChart3, Boxes, ChevronDown, LayoutDashboard, Settings, ShoppingCart, Truck, Users, Wallet, X,
+  BarChart3, Boxes, ChevronDown, LayoutDashboard, Settings, ShoppingCart, Truck, Users, X,
 } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { podeConfigurar, podeGerenciarEstoque, podeVerFinanceiro, podeVerRelatorios } from '@/lib/auth/papeis'
@@ -36,17 +36,6 @@ const MENU: Item[] = [
       { label: 'Nova venda', href: '/vendas/nova' },
       { label: 'Vendas realizadas', href: '/vendas' },
       { label: 'Cancelamentos', href: '/vendas/cancelamentos', requer: podeVerFinanceiro },
-    ],
-  },
-  {
-    label: 'Financeiro', href: '/financeiro', icon: Wallet, requer: podeVerFinanceiro,
-    filhos: [
-      { label: 'Visão geral', href: '/financeiro' },
-      { label: 'Caixa', href: '/financeiro/caixa' },
-      { label: 'Contas a pagar', href: '/financeiro/contas-a-pagar' },
-      { label: 'Contas a receber', href: '/financeiro/contas-a-receber' },
-      { label: 'Despesas', href: '/financeiro/despesas' },
-      { label: 'Receitas', href: '/financeiro/receitas' },
     ],
   },
   { label: 'Relatórios', href: '/relatorios', icon: BarChart3, requer: podeVerRelatorios },
