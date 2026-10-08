@@ -25,7 +25,7 @@ export function Topbar({ onAbrirMenu, usuario }: { onAbrirMenu: () => void; usua
   }, [menuAberto])
 
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-borda bg-preto/85 px-4 py-3 backdrop-blur lg:px-8">
+    <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-borda bg-fundo/85 px-4 py-3 backdrop-blur lg:px-8">
       <button className="text-texto-2 lg:hidden" onClick={onAbrirMenu} aria-label="Abrir menu">
         <Menu size={22} />
       </button>

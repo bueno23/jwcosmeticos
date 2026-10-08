@@ -40,7 +40,6 @@ export function TrocarSenhaModal({
           <input
             type="password"
             autoComplete="current-password"
-            autoFocus
             value={senhaAtual}
             onChange={(e) => setSenhaAtual(e.target.value)}
             className={inputClass}

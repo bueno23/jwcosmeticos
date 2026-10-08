@@ -2,6 +2,7 @@
 
 /* Identidade JW Cosméticos: preto e dourado do brasão */
 :root {
+  --fundo: #0B0B0C;
   --preto: #0B0B0C;
   --superficie: #131315;
   --superficie-2: #1A1A1D;
@@ -15,9 +16,30 @@
   --texto-3: #71717A;
   --positivo: #22C55E;
   --negativo: #EF4444;
+  color-scheme: dark;
+}
+
+/*
+ * Tema claro: troca só o fundo/superfícies/texto (preto continua escuro de
+ * propósito — é o texto de contraste sobre o dourado nos botões e telas).
+ */
+:root[data-theme='light'] {
+  --fundo: #FAFAFA;
+  --superficie: #FFFFFF;
+  --superficie-2: #F4F4F5;
+  --borda: #E4E4E7;
+  --borda-clara: #D4D4D8;
+  --texto: #18181B;
+  --texto-2: #52525B;
+  --texto-3: #8A8A93;
+  --positivo: #16A34A;
+  --negativo: #DC2626;
+  --laranja: #D97706;
+  color-scheme: light;
 }
 
 @theme inline {
+  --color-fundo: var(--fundo);
   --color-preto: var(--preto);
   --color-superficie: var(--superficie);
   --color-superficie-2: var(--superficie-2);
@@ -38,18 +60,18 @@
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 body {
-  background: var(--preto);
+  background: var(--fundo);
   color: var(--texto);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 ::selection { background: var(--dourado); color: #0B0B0C; }
 
-/* Barra de rolagem discreta, para não brigar com o fundo escuro */
+/* Barra de rolagem discreta, para não brigar com o fundo */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #2A2A2F; border-radius: 99px; border: 3px solid var(--preto); }
-::-webkit-scrollbar-thumb:hover { background: #3A3A41; }
+::-webkit-scrollbar-thumb { background: var(--borda-clara); border-radius: 99px; border: 3px solid var(--fundo); }
+::-webkit-scrollbar-thumb:hover { background: var(--texto-3); }
 
 .num { font-variant-numeric: tabular-nums; }
 .card {

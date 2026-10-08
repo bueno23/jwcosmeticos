@@ -1,7 +1,8 @@
 'use client'
 
 import { X } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 export function Modal({
   titulo, descricao, onFechar, children, largura = 'max-w-lg',
@@ -22,7 +23,17 @@ export function Modal({
     }
   }, [onFechar])
 
-  return (
+  // Precisa montar fora da árvore do chamador: um ancestral com backdrop-blur/filter/transform
+  // (como a topbar) vira containing block de `position: fixed` e quebra o posicionamento do modal.
+  const [montado, setMontado] = useState(false)
+  useEffect(() => {
+    // só existe `document.body` no cliente: o portal não pode montar durante o SSR
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMontado(true)
+  }, [])
+  if (!montado) return null
+
+  return createPortal(
     <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/70 p-0 sm:items-center sm:p-6" onClick={onFechar}>
       <div
         className={`card max-h-[92vh] w-full overflow-y-auto rounded-b-none sm:rounded-b-[14px] ${largura}`}
@@ -42,6 +53,7 @@ export function Modal({
         </div>
         <div className="p-5">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
